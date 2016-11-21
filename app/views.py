@@ -15,6 +15,19 @@ def about():
                          title='About')
 
 
+@app.route('/travels.html')
+@app.route('/travels')
+def travels():
+  return render_template('travels.html',
+                         title='Travels')
+
+
+@app.route('/lonely.html')
+@app.route('/lonely')
+def lonely():
+  return render_template('lonely.html',
+                         title='Lonely')
+
 
 @app.route('/user')
 def user():
@@ -33,5 +46,17 @@ def user():
                          title='User',
                          user=user,
                          posts=posts)
+
+@app.errorhandler(404)
+def page_not_found(error):
+  return render_template("404.html",
+                        title="Not Found")
+
+
+
+
+
+
+
 
 

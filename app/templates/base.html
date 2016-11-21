@@ -1,19 +1,83 @@
-
+<DOCTYPE html>
+<html lang="en">
 
 <html>
-  <head>
-    {% if title %}
-    <title>{{ title }} - microblog</title>
-    {% else %}
-    <title>Welcome to microblog</title>
-    {% endif %}
-  </head>
-  <body>
-    <div>Microblog: <a href="/index">Home</a></div>
-    <hr>
-    {% block content %}{% endblock %}
-  </body>
+<head>
+    <link rel="shortcut icon" href="../static/images/dust.jpg" type="image/x-icon" />
+    <title>Wasted Summer Days</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+    <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+
+    <!-- Custom CSS -->
+    <link href="landing.css" rel="stylesheet">
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
+    <link href='http://fonts.googleapis.com/css?family=Droid+Sans' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Architects+Daughter' rel='stylesheet' type='text/css'>
+
+
+
+<link href="https://fonts.googleapis.com/css?family=Montserrat|Raleway" rel="stylesheet" type="text/css">
+<style type="text/css">
+
+   body {
+    } /* ***!important*** Adding !important forces the browser to overwrite the default style applied by Bootstrap */
+    .sizer {
+      width: 300px;
+    }
+
+    h2,h4{color:#777;letter-spacing:1px}
+
+    .card,.card p{box-sizing:border-box}.card p,footer{text-align:center}
+
+</style> 
+
+<!-- navbar-fixed-top topnav -->
+<nav class="navbar navbar-default navbar-fixed-top topnav" style="background-color: #2c3e50">
+
+  <!-- topnav -->
+        <div class="container-fluid topnav">
+
+            <!-- Logo -->
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#mainNavBar">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a href="#" class="navbar-brand">Wasted Summer Days</a>
+            </div>
+
+            <!-- Menu Items -->
+            <div class="collapse navbar-collapse" id="mainNavBar">
+                <ul class="nav navbar-nav">
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="about.html">About</a></li>
+                    <li><a href="travels.html">Travels</a></li>
+                </ul>
+            </div>
+
+        </div>
+</nav>
+</head>
+
+<body>
+  {% block content %} {% endblock %}
+</body>
 </html>
+
+
+
+
+
+
+
+
+
+
+
 
 
 

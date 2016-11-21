@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+
+{% extends "base.html" %}
+{% block content %}
+
+<html>
+  <head>
+    <style>
+      #map {
+        height: 400px;
+        width: 75%;
+       }
+    </style>
+    <script type="text/javascript">
+      function random_place(){
+        var link=["https://www.lonelyplanet.com/iceland", 
+                  "https://www.lonelyplanet.com/finland/lapland/travel-tips-and-articles/laplands-gold-foraging-for-cloudberries-in-finland",
+                  "https://www.lonelyplanet.com/colombia",
+                  "https://www.lonelyplanet.com/madagascar",
+                  "https://www.lonelyplanet.com/india",
+                  "https://www.lonelyplanet.com/bolivia",
+                  "https://www.lonelyplanet.com/chile",
+                  "https://www.lonelyplanet.com/argentina",
+                  "https://www.lonelyplanet.com/spain",
+                  "https://www.lonelyplanet.com/morocco",
+                  "https://www.lonelyplanet.com/south-africa"]
+
+        var myrandom=Math.round(Math.random()*link.length)
+        window.location = link[myrandom]        
+      }
+
+    </script>
+  </head>
+  <body>
+    <!-- Banner header section -->
+    <div class="intro-banner">
+        <div class="container">
+            <div class="row">
+
+                <div class="col-lg-12">
+                    <br.
+                    <br>
+                    <br>
+                    <div class="intro-inner">
+
+                        <h1 class="text-center" style="font-size: 64.1127px;"><a href="javascript:random_place();"><br>Where in the world can I go</a></h1>
+                        <h2 id="subtitle" class="text-center" style="font-size: 21.4167px;">A way to channel my wanderlust at school</h2>
+
+                        <hr class="intro-divider">
+
+                        </ul>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+
+    <div id="map" style="width:80%;margin-left:10%;"></div>
+    <script>
+      function initMap() {
+        var uluru = {lat: 48.1351, lng: 11.5820};
+        var map = new google.maps.Map(document.getElementById('map'), {
+          zoom: 4,
+          center: uluru
+        });
+        var marker = [ 
+            new google.maps.Marker({ setMap:null, label: "A", position: uluru, map: map }),
+            new google.maps.Marker({ setMap:null, label: "B", position: {lat: 50.8503, lng: 4.3517}, map: map }),
+            new google.maps.Marker({ setMap:null, label: "C", position: {lat: 51.5074, lng: 0.1278}, map: map }),
+            new google.maps.Marker({ setMap:null, label: "D", position: {lat: 48.8566, lng: 2.3522}, map: map }),
+            new google.maps.Marker({ setMap:null, label: "E", position: {lat: 55.6761, lng: 12.5683}, map: map }),
+            new google.maps.Marker({ setMap:null, label: "F", position: {lat: 52.5200, lng: 13.4050}, map: map }),
+            new google.maps.Marker({ setMap:null, label: "G", position: {lat: 47.8095, lng: 13.0550}, map: map }),
+        ];
+        var prev = marker[0];
+        
+        for ( var i = 0; i < marker.length; i ++){
+            
+            prev.setMap(null);
+            marker[i].setMap();
+            prev = marker[i];
+            
+            setTimeout(function(){
+                console.log('after');
+            },5000);
+        }
+        
+        }
+    </script>
+    <script async defer
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBnDlXJYQzkFq7QOyUSi7JgDURNC-vFisk&callback=initMap">
+    </script>
+
+   <ul class="container" align="center" style="width:80%;margin-left:10%;">
+          <h1> HI </h1>
+            <div class="card" align="center"><a>
+                <div class="col-sm-6">
+                    <h4 class="text-center"><br>Where shall we go?</h4>
+                      <p class="text-center">Anywhere is better than here</p><h4 class="text-center">2016
+                    </h4>
+                </div>
+
+            </div></a>
+    </ul>
+
+
+
+
+
+</body>
+</html>
+
+{% endblock %}
+
