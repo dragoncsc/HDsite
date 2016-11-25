@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+
+{% extends "base.html" %}
+{% block content %}
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+<script src="http://code.jquery.com/ui/1.9.2/jquery-ui.js"></script>
+<script type="text/javascript" src="test.js"></script>
+
+
+<!-- Include Required Prerequisites -->
+<script type="text/javascript" src="//cdn.jsdelivr.net/jquery/1/jquery.min.js"></script>
+<script type="text/javascript" src="//cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
+<link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/bootstrap/3/css/bootstrap.css" />
+ 
+<!-- Include Date Range Picker -->
+<script type="text/javascript" src="//cdn.jsdelivr.net/bootstrap.daterangepicker/2/daterangepicker.js"></script>
+<link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/bootstrap.daterangepicker/2/daterangepicker.css" />
+<html>
+  <head>
+    <style>
+      .card{
+        background-color:#D3D3D3;
+        text-align: center;
+        margin: 0;
+      }
+      #map {
+        height: 400px;
+        width: 75%;
+       }
+
+    </style>
+
+    <script type="text/javascript">
+    $('dropdown-menu noclose').click(function(){
+    $('#selected').text($(this).text());
+  });
+    </script>
+    <script type="text/javascript">
+      function random_place(){
+        var link=["https://www.lonelyplanet.com/iceland", 
+                  "https://www.lonelyplanet.com/finland/lapland/travel-tips-and-articles/laplands-gold-foraging-for-cloudberries-in-finland",
+                  "https://www.lonelyplanet.com/colombia",
+                  "https://www.lonelyplanet.com/madagascar",
+                  "https://www.lonelyplanet.com/india",
+                  "https://www.lonelyplanet.com/bolivia",
+                  "https://www.lonelyplanet.com/chile",
+                  "https://www.lonelyplanet.com/argentina",
+                  "https://www.lonelyplanet.com/spain",
+                  "https://www.lonelyplanet.com/morocco",
+                  "https://www.lonelyplanet.com/south-africa"]
+
+        var myrandom=Math.round(Math.random()*link.length)
+        window.location = link[myrandom]        
+      }
+
+    </script>
+
+    <script type="text/javascript">
+        $(function() {
+          $('input[name="daterange"]').daterangepicker({
+              timePicker: true,
+              timePickerIncrement: 30,
+              locale: {
+              format: 'MM/DD/YYYY h:mm A'
+              }
+          });
+        });
+        </script>
+  </head>
+  <body>
+    <!-- Banner header section -->
+    <div class="intro-banner">
+        <div class="container">
+            <div class="row">
+
+                <div class="col-lg-12">
+                    <br>
+                    <br>
+                    <br>
+                    <div class="intro-inner">
+
+                        <h1 class="text-center" style="font-size: 64.1127px;"><a href="javascript:random_place();"><br>Queue Reader</a></h1>
+                        <h2 id="subtitle" class="text-center" style="font-size: 21.4167px;">Catch up with your reading</h2>
+
+                        <hr class="intro-divider">
+
+                        </ul>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <div align"center">
+
+      <form action="/priority" method="post" align="center" >
+        <h1>Input Article</h1>
+        <input type="text" placeholder="Article Link" name="link" value={{ request.form.link }}><br>
+        <input type="text" placeholder="Article Title" name="Title" value={{ request.form.title }}><br>
+        <input type="text" name="daterange" value="01/01/2015 1:30 PM - 01/01/2015 2:00 PM" value={{ request.form.datetime }}><br>
+
+        <div class="btn-group" align="center">
+        <button data-toggle="dropdown" class="btn btn-default dropdown-toggle"> 
+              <span id="selected">  Source </span>
+        <span class="caret"></span></button>
+        <ul class="dropdown-menu noclose">
+          <li><input type="radio" id="ID" name="Type" value="NYTimes"><label for="ID">  NYTimes      </label></li>
+          <li><input type="radio" id="ID" name="Type" value="Economist"><label for="ID">  Economist          </label></li>
+          <li><input type="radio" id="ID" name="Type" value="Washington Post"><label for="ID">  Washington Post              </label></li>
+          <li><input type="radio" id="ID" name="Type" value="FiveThirtyEight"><label for="ID">   FiveThirtyEight         </label></li>
+          <li><input type="radio" id="ID" name="Type" value="Times of London"><label for="ID">  Times of London </label></li>
+          <li><input type="radio" id="ID" name="Type" value="Guardian"><label for="ID">  Guardian           </label></li>
+          <li><input type="radio" id="ID" name="Type" value="Other"><label for="ID">  Other              </label></li>
+          </ul>
+        </div>
+
+        <div>
+          <button type="submit" >Queue up</button>
+        </div>
+
+      </form>
+
+
+      <div align="center">
+      <hr class="intro-divider">
+      <h1 class="text-center" color=#ff0000 style="font-size: 40.1127px;" align="center">Current Queue:</h1>
+      <hr class="intro-divider">
+          {% for item in tasks %}
+
+          <div class="row" align="center">
+            <div class="col-sm-6 col-md-4">
+              <div class="thumbnail">
+              <img src="../static/images/economist.jpg" alt="..." style="width:50%; height:50%">
+              <div class="caption">
+              <h4 class="card-title"> Source: {{ item[0] }} </h4>
+              <p class="card-text"> <small>to be done by</small> <h3> {{ item[1] }} </h3> </p>
+              <a class="container" align="center">{{ item[2] }}</a><br>
+              </div>
+            </div>
+          </div>
+
+
+
+            <div class="col-sm-6 col-md-4">
+              <h3 style="font-size 34px" align="center"> Categorize article </h3>
+            <div class="col-xs-6">
+            <div class="checkbox">
+              <ul class="list-group">
+                <li class="list-group-item"><input type="checkbox" name="ArtCat" value="Left"> Left</li>
+                <li class="list-group-item"><input type="checkbox" name="ArtCat" value="Right"> Right</li>
+                <li class="list-group-item"><input type="checkbox" name="ArtCat" value="Center"> Centrist</li>
+                <li class="list-group-item"><input type="checkbox" name="ArtCat" value="Economy"> Economy</li>
+                <li class="list-group-item"><input type="checkbox" name="ArtCat" value="Sports"> Sports</li>
+                <li class="list-group-item"><input type="checkbox" name="ArtCat" value="News"> News</li>
+              </ul>
+            </div>
+
+            </div><br>
+            <div class="col-sm-6">
+              <div class="form-group">
+                <textarea class="form-control" style="inline" id="exampleTextarea" rows="10">Thoughts on the article</textarea>
+              </div>
+            </div>
+            
+            </div>
+            <br><br> <br><br> <br><br> <br><br> 
+            <p><a href="#" class="btn btn-primary" role="button">Finished reading</a></p><p> <a href="#" class="btn btn-default" role="button">Discard</a></p>
+          </div>
+
+          <hr class="intro-divider">
+
+          {% endfor %}
+      </div> 
+
+      {% block results %} {% endblock %}
+
+    </div>
+<!--    
+    <div id="map" style="width:80%;margin-left:10%;"></div>
+    <script>
+      function initMap() {
+        var uluru = {lat: 48.1351, lng: 11.5820};
+        var map = new google.maps.Map(document.getElementById('map'), {
+          zoom: 4,
+          center: uluru
+        });
+        var marker = [ 
+            new google.maps.Marker({ setMap:null, label: "A", position: uluru, map: map }),
+            new google.maps.Marker({ setMap:null, label: "B", position: {lat: 50.8503, lng: 4.3517}, map: map }),
+            new google.maps.Marker({ setMap:null, label: "C", position: {lat: 51.5074, lng: 0.1278}, map: map }),
+            new google.maps.Marker({ setMap:null, label: "D", position: {lat: 48.8566, lng: 2.3522}, map: map }),
+            new google.maps.Marker({ setMap:null, label: "E", position: {lat: 55.6761, lng: 12.5683}, map: map }),
+            new google.maps.Marker({ setMap:null, label: "F", position: {lat: 52.5200, lng: 13.4050}, map: map }),
+            new google.maps.Marker({ setMap:null, label: "G", position: {lat: 47.8095, lng: 13.0550}, map: map }),
+        ];
+        var prev = marker[0];
+        
+        for ( var i = 0; i < marker.length; i ++){
+            
+            prev.setMap(null);
+            marker[i].setMap();
+            prev = marker[i];
+            
+            setTimeout(function(){
+                console.log('after');
+            },5000);
+        }
+        
+        }
+    </script>
+    <script async defer
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBnDlXJYQzkFq7QOyUSi7JgDURNC-vFisk&callback=initMap">
+    </script>
+
+   <ul class="container" align="center" style="width:80%;margin-left:10%;">
+          <h1> HI </h1>
+            <div class="card" align="center"><a>
+                <div class="col-sm-6">
+                    <h4 class="text-center"><br>Where shall we go?</h4>
+                      <p class="text-center">Anywhere is better than here</p><h4 class="text-center">2016
+                    </h4>
+                </div>
+
+            </div></a>
+    </ul>
+-->
+
+
+
+</body>
+</html>
+
+{% endblock %}
+

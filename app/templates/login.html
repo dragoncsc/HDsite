@@ -1,0 +1,58 @@
+<!-- extend from base layout -->
+
+{% extends "base.html" %}
+
+{% block content %}
+  <h3> The unofficial-official signin page </h3>
+
+<div class="intro-banner">
+        <div class="container">
+            <div class="row">
+
+                <div class="col-lg-12">
+                    <br.
+                    <br>
+                    <br>
+                    <div class="intro-inner">
+
+                        <h1 class="text-center" style="font-size: 35px;"><br>~/ Login</h1>
+
+                        <hr class="intro-divider">
+
+                        </ul>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+
+<html>
+  <head>
+    <title>Flask Intro - login page</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="static/bootstrap.min.css" rel="stylesheet" media="screen">
+  </head>
+  <body>
+    <div class="container">
+      <br>
+      <form action="" method="post">
+        <input type="text" placeholder="Username" name="username" value="{{
+          request.form.username }}">
+         <input type="password" placeholder="Password" name="password" value="{{
+          request.form.password }}">
+
+      <input type="submit" class="btn btn-secondary" value='Login'></button>        
+      </form>
+      {% if error %}
+        <p class="error"><strong>Error:</strong> {{ error }}
+      {% endif %}
+    </div>
+  </body>
+</html>
+
+{% endblock %}
+
+
+

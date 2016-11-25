@@ -56,7 +56,26 @@
         </div>
     </div>
 
+    <div align="center">
+      <h1>Search</h1>
+      <form action="/search" method="post" align="center">
+      </form>
 
+      <form action="/search" method="post">
+        <input type="text" placeholder="Search for a place" name="user_search" required/>
+        <button type="submit"> Let's go</button>
+      </form>
+      {% block results %} {% endblock %}
+
+            <div class="card" align="center"><a>
+                <div class="col-sm-6">
+                    <h4 class="text-center"><br>We could be anywhere</h4>
+                      <p class="text-center">Anywhere is better than here</p><h4 class="text-center">2016
+                    </h4>
+                </div>
+            </div></a>
+    </div>
+<!--    
     <div id="map" style="width:80%;margin-left:10%;"></div>
     <script>
       function initMap() {
@@ -104,8 +123,7 @@
 
             </div></a>
     </ul>
-
-
+-->
 
 
 
