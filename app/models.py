@@ -1,16 +1,23 @@
 from app import db
 
-class Task(db.Model):
+class Article(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    taskname = db.Column(db.String(70), index=True)
-    date = db.Column(db.String(140), index=True)
-    type = db.Column(db.String(50), index=True)
+    link = db.Column(db.String(250), index=True)
+    title = db.Column(db.String(140), index=True)
+    source = db.Column(db.String(50), index=True)
 
     def __repr__(self):
-        return '<Task %r>' % (self.taskname)
+        return '<Task %r>' % (self.title)
 
 
+class Impressions(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    thoughts = db.Column(db.String(500), index=True)
+    title = db.Column(db.String(140), index=True)
+    category = db.Column(db.String(50), index=True)
 
+    def __repr__(self):
+        return '<Task %r>' % (self.title)
 
 
 
