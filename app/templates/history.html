@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+
+{% extends "base.html" %}
+{% block content %}
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+<script src="http://code.jquery.com/ui/1.9.2/jquery-ui.js"></script>
+<script type="text/javascript" src="test.js"></script>
+
+
+<!-- Include Required Prerequisites -->
+<script type="text/javascript" src="//cdn.jsdelivr.net/jquery/1/jquery.min.js"></script>
+<script type="text/javascript" src="//cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
+<link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/bootstrap/3/css/bootstrap.css" />
+ 
+<!-- Include Date Range Picker -->
+<script type="text/javascript" src="//cdn.jsdelivr.net/bootstrap.daterangepicker/2/daterangepicker.js"></script>
+<link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/bootstrap.daterangepicker/2/daterangepicker.css" />
+<html>
+  <head>
+    <style>
+      .card{
+        background-color:#D3D3D3;
+        text-align: center;
+        margin: 0;
+      }
+      #map {
+        height: 400px;
+        width: 75%;
+       }
+
+    </style>
+    
+    <script>
+    function sub( id ) {
+        console.log('sub function');
+        $(id).submit();
+    }
+    </script>
+    <script type="text/javascript">
+      function random_place(){
+        var link=["https://www.nytimes.com", 
+                  "https://www.economist.com",
+                  "https://www.thetimes.com",
+                  "https://www.washingtonpost.com"]
+
+        var myrandom=Math.round(Math.random()*link.length)
+        window.location = link[myrandom]        
+      }
+
+    </script>
+
+    <script type="text/javascript">
+        $(function() {
+          $('input[name="daterange"]').daterangepicker({
+              timePicker: true,
+              timePickerIncrement: 30,
+              locale: {
+              format: 'MM/DD/YYYY h:mm A'
+              }
+          });
+        });
+        </script>
+  </head>
+  <body>
+    <!-- Banner header section -->
+    <div class="intro-banner">
+        <div class="container">
+            <div class="row">
+
+                <div class="col-lg-12">
+                    <br>
+                    <br>
+                    <br>
+                    <div class="intro-inner">
+
+                        <h1 class="text-center" style="font-size: 64.1127px;"><a href="javascript:random_place();"><br>Queue Reader</a></h1>
+                        <h2 id="subtitle" class="text-center" style="font-size: 21.4167px;">Catch up with your reading</h2>
+
+                        <hr class="intro-divider">
+
+                        </ul>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <div align"center">
+
+      {% if tasks %}
+      <div align="center">
+      <hr class="intro-divider">
+      <h1 class="text-center" color=#ff0000 style="font-size: 40.1127px;" align="center">Previous Articles:</h1>
+      <hr class="intro-divider">
+          {% for item in tasks %}
+          <div class="row" align="center">
+            <div class="col-sm-6 col-md-4">
+              <div class="thumbnail" style='text-align: center;'>
+              <img src= {{item[4]}} alt="..." style="width:50%; height:50%">
+              <div class="caption">
+              <h4 class="card-title"> Title: {{ item[0] }} </h4>
+              <p class="card-text">  Thoughts: <br> <small> {{ item[1] }} </small> </p>
+              <a class="container" align="center">{{ item[2] }}</a><br>
+              <h3 class="text-center" style="font-size: 20px;" > From: {{ item[3] }}</a><br>
+              </div>
+            </div>
+          </div>
+
+          </div>
+          {% endfor %}
+        <hr class="intro-divider">
+      {% else %}
+       <h1 class="text-center" style="font-size: 64.1127px;"><a href="javascript:random_place();"><br>You haven't read anything, Get reading!</a></h1>
+      {% endif %}
+
+      </div> 
+
+      {% block results %} {% endblock %}
+
+    </div>
+<!--    
+
+-->
+
+
+
+</body>
+</html>
+
+{% endblock %}
+

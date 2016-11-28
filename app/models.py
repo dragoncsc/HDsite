@@ -15,6 +15,7 @@ class Impressions(db.Model):
     thoughts = db.Column(db.String(500), index=True)
     title = db.Column(db.String(140), index=True)
     category = db.Column(db.String(50), index=True)
+    source = db.Column(db.String(50), index=True)
 
     def __repr__(self):
         return '<Task %r>' % (self.title)

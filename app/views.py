@@ -51,15 +51,33 @@ def priority():
       title='Prioritizer', tasks=process.get_all_articles())
 
 
+@app.route('/history.html', methods=["GET", "POST"])
+@app.route('/history', methods=["GET", "POST"])
+def history():
+  return render_template('history.html',
+      title='Prioritizer', tasks=process.get_all_impressions())
 
-@app.route('/discard', methods=['POST'])
-def discard():
+
+
+@app.route('/updatequeue', methods=['POST'])
+def updatequeue():
   print request.form
   cur = Article.query.filter_by( id=request.form['_article'] ).first()
-  db.session.delete(cur)
-  db.session.commit()
-
-  return url_for('priority')
+  if 'save' in request.form:
+    thought = 'None'
+    artcat = 'None'
+    if 'thoughts' in request.form:
+      thought = request.form['thoughts']
+    if 'ArtCat' in request.form:
+      artcat = request.form['ArtCat']
+    impression = Impressions( thoughts=thought, category=artcat, title=cur.title, source=cur.source )
+    db.session.add(impression)
+    db.session.commit()
+  if '_article' in request.form:
+    db.session.delete(cur)
+    db.session.commit()
+  return render_template('priority.html',
+      title='Prioritizer', tasks=process.get_all_articles())
 
 @app.errorhandler(404)
 def page_not_found(error):
