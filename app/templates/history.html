@@ -96,16 +96,18 @@
       <hr class="intro-divider">
           {% for item in tasks %}
           <div class="row" style='text-align: center;'>
-            <div class="card" style='text-align: center;'>
-              <div class="thumbnail" style='text-align: center;'>
-              <img src= {{item[4]}} alt="..." style="width:50%; height:50%">
-              <div class="caption" style='text-align: center;'>
-              <h4 class="card-title"> Title: {{ item[0] }} </h4>
-              <p class="card-text">  Thoughts: <br> <small> {{ item[1] }} </small> </p>
-              <a class="container" align="center">{{ item[2] }}</a><br>
-              <h3 class="text-center" style="font-size: 20px;" > From: {{ item[3] }}</a><br>
+            
+              <div class="card card-block" style='text-align: center;'>
+                <div class="thumbnail" style='text-align: center;'>
+                <img src= {{item[4]}} alt="..." style="width:50%; height:50%">
+                <div class="caption" style='text-align: center;'>
+                <h4 class="card-title"> Title: {{ item[0] }} </h4>
+                <p class="card-text">  Thoughts: <br> <small> {{ item[1] }} </small> </p>
+                <a class="container" align="center">{{ item[2] }}</a><br>
+                <h3 class="text-center" style="font-size: 20px;" > From: {{ item[3] }}</a><br>
+                </div>
               </div>
-            </div>
+
           </div>
 
           </div>

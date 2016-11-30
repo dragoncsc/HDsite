@@ -3,9 +3,11 @@ from flask import render_template, request, url_for, redirect
 import requests
 from models import Article, Impressions
 import sqlite3
-from parse_task import process_tasks
+from parse_task import process_articles
 
-process = process_tasks()
+backend_article_handler = process_articles()
+catagories = ['Left', 'Right', 'Centrist', 'Economy', 'Sports', 'News']
+
 
 class InvalidUsage(Exception):
     status_code = 400
@@ -21,7 +23,6 @@ class InvalidUsage(Exception):
         rv = dict(self.payload or ())
         rv['message'] = self.message
         return rv
-
 
 
 @app.route('/')
@@ -48,36 +49,44 @@ def priority():
     db.session.add(cur)
     db.session.commit()
   return render_template('priority.html',
-      title='Prioritizer', tasks=process.get_all_articles())
+      title='Prioritizer', tasks=backend_article_handler.get_all_articles())
 
 
 @app.route('/history.html', methods=["GET", "POST"])
 @app.route('/history', methods=["GET", "POST"])
 def history():
   return render_template('history.html',
-      title='Prioritizer', tasks=process.get_all_impressions())
-
+      title='Prioritizer', tasks=backend_article_handler.get_all_impressions())
 
 
 @app.route('/updatequeue', methods=['POST'])
 def updatequeue():
-  print request.form
-  cur = Article.query.filter_by( id=request.form['_article'] ).first()
-  if 'save' in request.form:
-    thought = 'None'
-    artcat = 'None'
-    if 'thoughts' in request.form:
-      thought = request.form['thoughts']
-    if 'ArtCat' in request.form:
-      artcat = request.form['ArtCat']
-    impression = Impressions( thoughts=thought, category=artcat, title=cur.title, source=cur.source )
-    db.session.add(impression)
-    db.session.commit()
-  if '_article' in request.form:
-    db.session.delete(cur)
-    db.session.commit()
+  data = request.get_json(silent=True)
+  print data
+  cur = Article.query.filter_by( id=data['articleId'] ).first()
+  cat = None
+  for i in xrange(len(data['checkbox'])):
+    if data['checkbox'][i]:
+      cat=catagories[i]
+      break
+  print cat
+  impression = Impressions( thoughts=data['impression'], category=i, title=cur.title, source=cur.source )
+  db.session.add(impression)
+  db.session.commit()
+  backend_article_handler.destroy_article( cur )
   return render_template('priority.html',
-      title='Prioritizer', tasks=process.get_all_articles())
+      title='Prioritizer', tasks=backend_article_handler.get_all_articles())
+
+
+
+@app.route('/destroy_article', methods=['DELETE'])
+def get_id_for_deletion(  ):
+  data = request.get_json(silent=True)
+  article = Article.query.get(data["articleId"])
+  if article != None:
+    return backend_article_handler.destroy_article( article )
+  return url_for('priority')
+
 
 @app.errorhandler(404)
 def page_not_found(error):

@@ -5,114 +5,152 @@
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
 <script src="http://code.jquery.com/ui/1.9.2/jquery-ui.js"></script>
-<script type="text/javascript" src="test.js"></script>
 
 
 <!-- Include Required Prerequisites -->
 <script type="text/javascript" src="//cdn.jsdelivr.net/jquery/1/jquery.min.js"></script>
 <script type="text/javascript" src="//cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
 <link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/bootstrap/3/css/bootstrap.css" />
- 
+
 <!-- Include Date Range Picker -->
 <script type="text/javascript" src="//cdn.jsdelivr.net/bootstrap.daterangepicker/2/daterangepicker.js"></script>
 <link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/bootstrap.daterangepicker/2/daterangepicker.css" />
 <html>
-  <head>
-    <style>
-      .card{
-        background-color:#D3D3D3;
-        text-align: center;
-        margin: 0;
+<head>
+  <style>
+  .card{
+    background-color:#D3D3D3;
+    text-align: center;
+    margin: 0;
+  }
+  #map {
+    height: 400px;
+    width: 75%;
+  }
+  .thumbnails {
+    text-align:center;
+  }
+
+  .thumbnails > li {
+    display: inline-block;
+    *display:inline; /* ie7 fix */
+    float: none; /* this is the part that makes it work */
+  }
+  </style>
+
+  <script>
+  function sub( id ) {
+    console.log('sub function');
+    $(id).submit();
+  }
+  </script>
+  <script type="text/javascript">
+  function random_place(){
+    var link=["https://www.lonelyplanet.com/iceland", 
+    "https://www.lonelyplanet.com/finland/lapland/travel-tips-and-articles/laplands-gold-foraging-for-cloudberries-in-finland",
+    "https://www.lonelyplanet.com/colombia",
+    "https://www.lonelyplanet.com/madagascar",
+    "https://www.lonelyplanet.com/india",
+    "https://www.lonelyplanet.com/bolivia",
+    "https://www.lonelyplanet.com/chile",
+    "https://www.lonelyplanet.com/argentina",
+    "https://www.lonelyplanet.com/spain",
+    "https://www.lonelyplanet.com/morocco",
+    "https://www.lonelyplanet.com/south-africa"]
+
+    var myrandom=Math.round(Math.random()*link.length)
+    window.location = link[myrandom]        
+  }
+
+  $(function() {
+    $('input[name="daterange"]').daterangepicker({
+      timePicker: true,
+      timePickerIncrement: 30,
+      locale: {
+        format: 'MM/DD/YYYY h:mm A'
       }
-      #map {
-        height: 400px;
-        width: 75%;
-       }
-      .thumbnails {
-          text-align:center;
-      }
+    });
+  });
 
-      .thumbnails > li {
-          display: inline-block;
-          *display:inline; /* ie7 fix */
-          float: none; /* this is the part that makes it work */
-      }
-    </style>
-    
-    <script>
-    function sub( id ) {
-        console.log('sub function');
-        $(id).submit();
-    }
-    </script>
-    <script type="text/javascript">
-      function random_place(){
-        var link=["https://www.lonelyplanet.com/iceland", 
-                  "https://www.lonelyplanet.com/finland/lapland/travel-tips-and-articles/laplands-gold-foraging-for-cloudberries-in-finland",
-                  "https://www.lonelyplanet.com/colombia",
-                  "https://www.lonelyplanet.com/madagascar",
-                  "https://www.lonelyplanet.com/india",
-                  "https://www.lonelyplanet.com/bolivia",
-                  "https://www.lonelyplanet.com/chile",
-                  "https://www.lonelyplanet.com/argentina",
-                  "https://www.lonelyplanet.com/spain",
-                  "https://www.lonelyplanet.com/morocco",
-                  "https://www.lonelyplanet.com/south-africa"]
+  function deleteArticle(event) {
+    event.preventDefault();
+    var el = $(event.target);
+    var id = el.closest("form").attr("article-id");
 
-        var myrandom=Math.round(Math.random()*link.length)
-        window.location = link[myrandom]        
-      }
+    $.ajax({
+      type: "DELETE",
+      url: "/destroy_article",
+      data: JSON.stringify({ articleId: id }),
+      contentType: "application/json",
+      dataType: "json"
+    }).fail(function (data) {
+      console.log('fail ! sad ! ')
+    }).done(function (data) {
+      console.log('done ! yay! ')
+      console.log(data);
+    })
+    window.location.href='/priority'
+  };
 
-    </script>
+  function save(event) {
+    event.preventDefault();
+    var el = $(event.target);
+    var id = el.closest("form").attr("article-id");
+    var text = $( 'textarea#' + id  ).val();
+    var cbox = [$("input[type='checkbox'][id=ArtCatL").is(':checked'),$("input[type='checkbox'][id=ArtCatR").is(':checked'), $("input[type='checkbox'][id=ArtCatC").is(':checked'), $("input[type='checkbox'][id=ArtCatE").is(':checked'), $("input[type='checkbox'][id=ArtCatS").is(':checked'), $("input[type='checkbox'][id=ArtCatN").is(':checked')];
+    console.log( text )
+    $.ajax({
+      type: "POST",
+      url: "/updatequeue",
+      data: JSON.stringify({ articleId: id, impression: text, checkbox:cbox}),
+      contentType: "application/json",
+      dataType: "json"
+    }).fail(function (data) {
+      console.log('fail ! sad ! ')
+    }).done(function (data) {
+      console.log('done ! yay! ')
+      console.log(data);
+    })
+    window.location.href='/priority'
+  };
+  </script>
+</head>
+<body>
+  <!-- Banner header section -->
+  <div class="intro-banner">
+    <div class="container">
+      <div class="row">
 
-    <script type="text/javascript">
-        $(function() {
-          $('input[name="daterange"]').daterangepicker({
-              timePicker: true,
-              timePickerIncrement: 30,
-              locale: {
-              format: 'MM/DD/YYYY h:mm A'
-              }
-          });
-        });
-        </script>
-  </head>
-  <body>
-    <!-- Banner header section -->
-    <div class="intro-banner">
-        <div class="container">
-            <div class="row">
+        <div class="col-lg-12">
+          <br>
+          <br>
+          <br>
+          <div class="intro-inner">
 
-                <div class="col-lg-12">
-                    <br>
-                    <br>
-                    <br>
-                    <div class="intro-inner">
+            <h1 class="text-center" style="font-size: 64.1127px;"><a href="javascript:random_place();"><br>Queue Reader</a></h1>
+            <h2 id="subtitle" class="text-center" style="font-size: 21.4167px;">Catch up with your reading</h2>
 
-                        <h1 class="text-center" style="font-size: 64.1127px;"><a href="javascript:random_place();"><br>Queue Reader</a></h1>
-                        <h2 id="subtitle" class="text-center" style="font-size: 21.4167px;">Catch up with your reading</h2>
+            <hr class="intro-divider">
 
-                        <hr class="intro-divider">
-
-                        </ul>
-                    </div>
-                </div>
-
-            </div>
+          </ul>
         </div>
+      </div>
+
     </div>
+  </div>
+</div>
 
-    <div align"center">
+<div align"center">
 
-      <form action="/priority" method="post" align="center">
-        <h1>Input Article</h1>
-        <input type="text" placeholder="Article Link" name="link" value={{ request.form.link }}><br>
-        <input type="text" placeholder="Article Title" name="Title" value={{ request.form.title }}><br>
-        <input type="text" name="daterange" value="01/01/2015 1:30 PM - 01/01/2015 2:00 PM" value={{ request.form.datetime }}><br>
+  <form action="/priority" method="post" align="center">
+    <h1>Input Article</h1>
+    <input type="text" placeholder="Article Link" name="link" value={{ request.form.link }}><br>
+    <input type="text" placeholder="Article Title" name="Title" value={{ request.form.title }}><br>
+    <input type="text" name="daterange" value="01/01/2015 1:30 PM - 01/01/2015 2:00 PM" value={{ request.form.datetime }}><br>
 
-        <div class="btn-group" align="center">
-        <button data-toggle="dropdown" class="btn btn-default dropdown-toggle"> 
-              <span id="selected">  Source </span>
+    <div class="btn-group" align="center">
+      <button data-toggle="dropdown" class="btn btn-default dropdown-toggle"> 
+        <span id="selected">  Source </span>
         <span class="caret"></span></button>
         <ul class="dropdown-menu noclose">
           <li><input type="radio" id="ID" name="Type" value="NYTimes"><label for="ID">  NYTimes      </label></li>
@@ -122,82 +160,78 @@
           <li><input type="radio" id="ID" name="Type" value="Times of London"><label for="ID">  Times of London </label></li>
           <li><input type="radio" id="ID" name="Type" value="Guardian"><label for="ID">  Guardian           </label></li>
           <li><input type="radio" id="ID" name="Type" value="Other"><label for="ID">  Other              </label></li>
-          </ul>
-        </div>
-        <div>
-          <button type="submit" >Queue up</button>
-        </div> <br>
-      </form>
+        </ul>
+      </div>
+      <div>
+        <button type="submit" >Queue up</button>
+      </div> <br>
+    </form>
 
-      <form action='/history' method="get" align="center">
-        <h2> <small> Nothing to read right now? Scroll through your thoughts on past articles: </small></h2>
-        <div>
-          <button type="submit" >Explore Past Reads</button>
-        </div>
-      </form>
+    <form action='/history' method="get" align="center">
+      <h2> <small> Nothing to read right now? Scroll through your thoughts on past articles: </small></h2>
+      <div>
+        <button type="submit" >Explore Past Reads</button>
+      </div>
+    </form>
 
 
-      <div align="center">
+    <div align="center">
       <hr class="intro-divider">
       <h1 class="text-center" color=#ff0000 style="font-size: 40.1127px;" align="center">Current Queue:</h1>
       <hr class="intro-divider">
-          {% for item in tasks %}
-          <form action="/updatequeue" method="post" style="inline">
-          <div class="row" align="center">
-            <div class="col-sm-6 col-md-4">
-              <div class="thumbnail">
-              <img src= {{item[3]}} alt="..." style="width:50%; height:50%">
-              <div class="caption">
-              <h4 class="card-title"> Title: {{ item[0] }} </h4>
-              <p class="card-text">  from: <small> <a href={{item[1]}}> {{ item[1] }} </a> </small> </p>
-              <a class="container" align="center">{{ item[2] }}</a><br>
+      {% for item in tasks %}
+      <form style="display: table" article-id={{ item[4] }}>
+        <div class="row" align="center">
+          <div class="col-sm-6 col-md-4">
+            <div class="thumbnail">
+              <img src= {{item[3]}} style="width:50%; height:50%" align="center">
+              <div class="caption" align="center">
+                <h4 class="card-title"> Title: {{ item[0] }} </h4>
+                <p class="card-text">  from: <small> <a href={{item[1]}}> {{ item[1] }} </a> </small> </p>
+                <a class="container" align="center">{{ item[2] }}</a><br>
               </div>
             </div>
           </div>
-
-              <div class="col-sm-6 col-md-4">
-                <h3 style="font-size 32px" align="center"> Categorize article </h3>
-              <div class="col-xs-6">
-              <div class="checkbox">
-                <ul class="list-group">
-                  <li class="list-group-item"><input type="checkbox" name="ArtCat" value="Left"> Left</li>
-                  <li class="list-group-item"><input type="checkbox" name="ArtCat" value="Right"> Right</li>
-                  <li class="list-group-item"><input type="checkbox" name="ArtCat" value="Center"> Centrist</li>
-                  <li class="list-group-item"><input type="checkbox" name="ArtCat" value="Economy"> Economy</li>
-                  <li class="list-group-item"><input type="checkbox" name="ArtCat" value="Sports"> Sports</li>
-                  <li class="list-group-item"><input type="checkbox" name="ArtCat" value="News"> News</li>
-                </ul>
-              </div>
-              </div>
-              
+          <div class="col-sm-6 col-md-4">
+            <h3 style="font-size 32px" align="center"> Categorize article </h3>
+            <div class="col-xs-6">
+                <div class="checkbox">
+                  <ul class="list-group" checkbox-id="category">
+                    <li class="list-group-item"><input type="checkbox" id="ArtCatL" value="Left"> Left</li>
+                    <li class="list-group-item"><input type="checkbox" name="ArtCatR" value="Right"> Right</li>
+                    <li class="list-group-item"><input type="checkbox" name="ArtCatC" value="Center"> Centrist</li>
+                    <li class="list-group-item"><input type="checkbox" name="ArtCatE" value="Economy"> Economy</li>
+                    <li class="list-group-item"><input type="checkbox" name="ArtCatS" value="Sports"> Sports</li>
+                    <li class="list-group-item"><input type="checkbox" name="ArtCatN" value="News"> News</li>
+                  </ul>
+                </div>
+            </div>
+            <div class="col-sm-6 col-md-4">
               <div>
-                <textarea placeholder="Thoughts on the article" cols="23" rows="15" name='thoughts'></textarea>
+                <textarea placeholder="Thoughts on the article" id= {{item[4]}} cols="23" rows="15" > </textarea>
               </div>
-
-              </div>
-
-              <br><br> <br><br> <br><br> <br><br>
-                
-                <input style="inline" type="checkbox" name="save" value={{item[4]}}> Save data
-                <input style="inline" type="checkbox" name="_article" value={{item[4]}}> Discard
-              <button type="submit"> Submit </button>
-            </form>
+            </div>
 
           </div>
-          {% endfor %}
-          <hr class="intro-divider">
+        </div>
+              
+        </form>
+        
+        <div class='row'>
+          <div class='col-sm-6 col-md-4'>
+              <button id="save-btn" onclick="save(event)">Save and remove from queue</button>
+              <button id="delete-btn" onclick="deleteArticle(event)">Delete without saving</button>
+          </div>
+        </div>
 
+      {% endfor %}
+      <hr class="intro-divider">
 
-      </div> 
+    </div> 
 
-      {% block results %} {% endblock %}
+    {% block results %} {% endblock %}
 
-    </div>
-<!--    
-
--->
-
-
+  </div>
 
 </body>
 </html>
