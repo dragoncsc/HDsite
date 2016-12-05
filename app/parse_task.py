@@ -1,5 +1,5 @@
 
-from models import Article, Impressions
+from models import Article, Impressions, User
 from app import app, db
 from flask import render_template, request, url_for, redirect
 
@@ -31,7 +31,7 @@ class process_articles():
 	def parse_impressions(self, from_db ):
 		all_tasks = []
 		
-		if len(from_db) == 0:
+		if not from_db or len(from_db) == 0:
 			return None
 		for u in from_db:
 			if u.source.upper() in self.sources_img:
@@ -41,13 +41,13 @@ class process_articles():
 		return all_tasks
 
 
-	def get_all_impressions( self ):
-		tasks = Impressions.query.all()
+	def get_all_impressions( self, username ):
+		tasks = User.query.get( username ).impression.all()
 		all_tasks = self.parse_impressions( tasks )
 		return all_tasks		
 
-	def get_all_articles( self ):
-		tasks = Article.query.all()
+	def get_all_articles( self, username ):
+		tasks = User.query.get( username ).articles.all()
 		all_tasks = self.parse_tasks( tasks )
 		return all_tasks
 	

@@ -5,6 +5,7 @@ class Article(db.Model):
     link = db.Column(db.String(250), index=True)
     title = db.Column(db.String(140), index=True)
     source = db.Column(db.String(50), index=True)
+    reader = db.Column( db.String, db.ForeignKey('user.username') )
 
     def __repr__(self):
         return '<Task %r>' % (self.title)
@@ -16,6 +17,7 @@ class Impressions(db.Model):
     title = db.Column(db.String(140), index=True)
     category = db.Column(db.String(50), index=True)
     source = db.Column(db.String(50), index=True)
+    writer = db.Column( db.String, db.ForeignKey('user.username') )
 
     def __repr__(self):
         return '<Task %r>' % (self.title)
@@ -28,6 +30,10 @@ class User(db.Model):
     username = db.Column(db.String, primary_key=True)
     password = db.Column(db.String)
     authenticated = db.Column(db.Boolean, default=False)
+    articles = db.relationship( 'Article', backref='_reader', 
+    	lazy='dynamic' )
+    impression = db.relationship( 'Impressions', backref='_writer', 
+    	lazy='dynamic' )
 
     def is_active(self):
         """True, as all users are active."""

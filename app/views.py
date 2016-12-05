@@ -32,16 +32,13 @@ def about():
 @app.route('/priority', methods=["GET", "POST"])
 @login_required
 def priority():
-
-  tasks = Article.query.all()
-  for u in tasks:
-    print(u.id, u.title)
   if request.method == "POST":
-    cur = Article(link=request.form['link'], title=request.form['Title'], source=request.form['Type'])
+    cur = Article(link=request.form['link'], title=request.form['Title'], 
+      source=request.form['Type'], reader=current_user.username)
     db.session.add(cur)
     db.session.commit()
   return render_template('priority.html',
-      title='Prioritizer', tasks=backend_article_handler.get_all_articles(), 
+      title='Prioritizer', tasks=backend_article_handler.get_all_articles(current_user.username), 
       user=current_user)
 
 
@@ -50,10 +47,11 @@ def priority():
 @login_required
 def history():
   return render_template('history.html',
-      title='Prioritizer', tasks=backend_article_handler.get_all_impressions())
+      title='Prioritizer', tasks=backend_article_handler.get_all_impressions(current_user.username))
 
 
 @app.route('/updatequeue', methods=['POST'])
+@login_required
 def updatequeue():
   data = request.get_json(silent=True)
   cur = Article.query.filter_by( id=data['articleId'] ).first()
@@ -62,7 +60,8 @@ def updatequeue():
     if data['checkbox'][i]:
       cat=catagories[i]
       break
-  impression = Impressions( thoughts=data['impression'], category=i, title=cur.title, source=cur.source )
+  impression = Impressions( thoughts=data['impression'], category=i, title=cur.title, 
+    source=cur.source, writer=current_user.username )
   db.session.add(impression)
   db.session.commit()
   backend_article_handler.destroy_article( cur )
@@ -71,6 +70,7 @@ def updatequeue():
 
 
 @app.route('/destroy_article', methods=['DELETE'])
+@login_required
 def get_id_for_deletion(  ):
   data = request.get_json(silent=True)
   article = Article.query.get(data["articleId"])

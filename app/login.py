@@ -24,7 +24,6 @@ class LoginForm(FlaskForm):
             return False
         hashed = hashlib.sha224()
         hashed.update(self.password.data)
-        print "In validation: ", hashed.hexdigest()
         if user.password != hashed.hexdigest():
             self.password.errors.append('Invalid password')
             return False
