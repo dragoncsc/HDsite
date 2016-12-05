@@ -1,0 +1,4 @@
+# don't track any python 'executables' or database files
+*.db
+*.pyc
+db_repository/

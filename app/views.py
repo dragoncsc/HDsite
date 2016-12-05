@@ -5,15 +5,18 @@ from models import Article, Impressions, User
 import sqlite3
 from parse_task import process_articles
 from urlparse import urlparse, urljoin
-from flask_login import LoginManager, login_user, current_user
+from flask_login import LoginManager, login_user, current_user, logout_user
 from login import LoginForm
 from flask.ext.security import login_required
 import hashlib
+
 
 backend_article_handler = process_articles()
 catagories = ['Left', 'Right', 'Centrist', 'Economy', 'Sports', 'News']
 login_manager = LoginManager()
 login_manager.init_app(app)
+login_manager.login_view = 'login'
+
 
 @app.route('/')
 @app.route('/index')
@@ -27,6 +30,12 @@ def index():
 def about():
   return render_template('about.html',
                          title='About')
+
+
+
+'''
+login required functionality (core app)
+'''
 
 @app.route('/priority.html', methods=["GET", "POST"])
 @app.route('/priority', methods=["GET", "POST"])
@@ -79,6 +88,18 @@ def get_id_for_deletion(  ):
   return url_for('priority')
 
 
+@app.route('/logout.html')
+@login_required
+def logout():
+  logout_user()
+  return url_for('login')
+
+
+
+''' 
+app login_required
+'''
+
 @app.route('/login.html', methods=['GET', 'POST'])
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -112,12 +133,26 @@ def user_loader(username):
     """
     return User.query.get(username)
 
+'''
+Error handlers
+'''
+
 @app.errorhandler(404)
 def page_not_found(error):
   return render_template("404.html",
                         title="Not Found")
 
+@app.errorhandler(401)
+def custom_401(error):
+  flash("You're not loged in yet!")
+  return redirect(url_for('priority'))
 
+
+
+
+'''
+Login helpers
+'''
 def addNewUser( request ):
   if User.query.get( request.form['newusername'] ):
     flash("Username is already taken")
