@@ -30,7 +30,6 @@ class process_articles():
 
 	def parse_impressions(self, from_db ):
 		all_tasks = []
-		
 		if not from_db or len(from_db) == 0:
 			return None
 		for u in from_db:
@@ -51,6 +50,12 @@ class process_articles():
 		all_tasks = self.parse_tasks( tasks )
 		return all_tasks
 	
+
+	def get_cat_articles( self, username, cat ):
+		tasks = User.query.get( username ).impression.filter_by( category=cat ).all()
+		all_tasks = self.parse_impressions( tasks )
+		return all_tasks
+
 	def destroy_article( self, article ):
 		db.session.delete( article )
 		db.session.commit()

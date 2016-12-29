@@ -17,7 +17,7 @@ login_manager = LoginManager()
 login_manager.init_app(app)
 login_manager.login_view = 'login'
 
-
+'''
 @app.route('/')
 @app.route('/index')
 @app.route('/index.html')
@@ -30,7 +30,17 @@ def index():
 def about():
   return render_template('about.html',
                          title='About')
+'''
 
+
+
+
+
+
+@app.route('/feed.html')
+@app.route('/feed')
+def feed():
+  return render_template( 'about.html' )
 
 
 '''
@@ -54,34 +64,47 @@ def priority():
 @app.route('/history.html', methods=["GET", "POST"])
 @app.route('/history', methods=["GET", "POST"])
 @login_required
-def history():
-  return render_template('history.html',
-      title='Prioritizer', tasks=backend_article_handler.get_all_impressions(current_user.username))
+def history(  ):
+  if 'cat' not in request.args:
+    return render_template('history.html',
+        title='Prioritizer', tasks=backend_article_handler.get_all_impressions(current_user.username), user=current_user)
+  else:
+    return render_template('history.html',
+        title='Prioritizer', tasks=backend_article_handler.get_cat_articles(current_user.username, request.args['cat']),
+        cat=request.args['cat'], user=current_user)
 
 
 @app.route('/updatequeue', methods=['POST'])
 @login_required
 def updatequeue():
   data = request.get_json(silent=True)
-  cur = Article.query.filter_by( id=data['articleId'] ).first()
+  print data
+  cur_article = data['articleId']
+  cur = User.query.get(current_user.username).articles.filter_by( id=cur_article ).first()
   cat = None
   for i in xrange(len(data['checkbox'])):
     if data['checkbox'][i]:
       cat=catagories[i]
       break
-  impression = Impressions( thoughts=data['impression'], category=i, title=cur.title, 
+  if 'impression' in data:
+    imp = data['impression']
+  else:
+    imp = ""
+  impression = Impressions( thoughts=imp, category=cat, title=cur.title, 
     source=cur.source, writer=current_user.username )
   db.session.add(impression)
   db.session.commit()
   backend_article_handler.destroy_article( cur )
   return render_template('priority.html',
-      title='Prioritizer', tasks=backend_article_handler.get_all_articles())
+      title='Prioritizer', tasks=backend_article_handler.get_all_articles(current_user.username),
+      user=current_user)
 
 
 @app.route('/destroy_article', methods=['DELETE'])
 @login_required
 def get_id_for_deletion(  ):
   data = request.get_json(silent=True)
+
   article = Article.query.get(data["articleId"])
   if article != None:
     return backend_article_handler.destroy_article( article )
@@ -93,6 +116,16 @@ def get_id_for_deletion(  ):
 def logout():
   logout_user()
   return url_for('login')
+
+
+@app.route( '/get_user_category', methods=['GET'] )
+@login_required
+def get_user_category():
+  return url_for( 'history' )
+
+
+
+
 
 
 
@@ -133,6 +166,14 @@ def user_loader(username):
     """
     return User.query.get(username)
 
+
+
+
+
+
+
+
+
 '''
 Error handlers
 '''
@@ -146,6 +187,13 @@ def page_not_found(error):
 def custom_401(error):
   flash("You're not loged in yet!")
   return redirect(url_for('priority'))
+
+
+
+
+
+
+
 
 
 
