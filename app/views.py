@@ -1,21 +1,29 @@
 from app import app, db
 from flask import render_template, request, url_for, redirect, flash, session
+# parsing get request data for priority, history, updatequeue
 import requests
+# ORM models
 from models import Article, Impressions, User
 import sqlite3
 from parse_task import process_articles
 from urlparse import urlparse, urljoin
+# both for facilitating login
 from flask_login import LoginManager, login_user, current_user, logout_user
 from login import LoginForm
 from flask.ext.security import login_required
+# for hashing passwords
 import hashlib
-
+# subprocess to initialize zmq server, cPickle to load server data
+import cPickle, subprocess, time
 
 backend_article_handler = process_articles()
+# categories for topic sorting
 catagories = ['Left', 'Right', 'Centrist', 'Economy', 'Sports', 'News']
 login_manager = LoginManager()
 login_manager.init_app(app)
 login_manager.login_view = 'login'
+
+
 
 '''
 @app.route('/')
@@ -33,20 +41,25 @@ def about():
 '''
 
 
+@app.before_first_request
+def initialize():
+  subprocess.Popen( ['python', 'build_suggestions.py'] )
+  #time.sleep( 4 )
 
 
-
-
+# grabs the current feed for a user
 @app.route('/feed.html')
 @app.route('/feed')
 def feed():
-  return render_template( 'about.html' )
+  articles = None
+  articles = cPickle.loads( backend_article_handler.grab_rss_feeds() )
+  return render_template( 'feed.html', tasks=articles )
 
 
 '''
 login required functionality (core app)
 '''
-
+@app.route('/')
 @app.route('/priority.html', methods=["GET", "POST"])
 @app.route('/priority', methods=["GET", "POST"])
 @login_required

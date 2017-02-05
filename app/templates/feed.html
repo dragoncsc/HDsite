@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+
+{% extends "base.html" %}
+{% block content %}
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+<script src="http://code.jquery.com/ui/1.9.2/jquery-ui.js"></script>
+<script type="text/javascript" src="test.js"></script>
+<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+<link rel="stylesheet" href="https://code.getmdl.io/1.3.0/material.indigo-pink.min.css">
+<script defer src="https://code.getmdl.io/1.3.0/material.min.js"></script>
+
+<!-- Include Required Prerequisites -->
+<script type="text/javascript" src="//cdn.jsdelivr.net/jquery/1/jquery.min.js"></script>
+<script type="text/javascript" src="//cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
+<link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/bootstrap/3/css/bootstrap.css" />
+
+<!-- Include Date Range Picker -->
+<script type="text/javascript" src="//cdn.jsdelivr.net/bootstrap.daterangepicker/2/daterangepicker.js"></script>
+<link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/bootstrap.daterangepicker/2/daterangepicker.css" />
+<html>
+<head>
+  <style>
+  .card{
+    background-color:#D3D3D3;
+    text-align: center;
+    margin: 0;
+  }
+  #map {
+    height: 400px;
+    width: 75%;
+  }
+  .thumbnails {
+    text-align:center;
+  }
+
+  .thumbnails > li {
+    display: inline-block;
+    *display:inline; /* ie7 fix */
+    float: none; /* this is the part that makes it work */
+  }
+  .bs-docs-header{
+    background-image:'/static/images/sister_lake_trees.jpg';
+  }
+  @media (max-width:767px) {
+
+    body { padding-left: 0px; }
+
+    #wrapper {
+      padding-left: 0;
+    }
+
+    #sidebar-wrapper {
+      left: 0;
+    }
+
+    #wrapper.active {
+      position: relative;
+      left: 250px;
+    }
+
+    #wrapper.active #sidebar-wrapper {
+      left: 250px;
+      width: 250px;
+      transition: all 0.4s ease 0s;
+    }
+
+  }
+  </style>
+
+  <script>
+  function sub( id ) {
+    console.log('sub function');
+    $(id).submit();
+  }
+  </script>
+  <script type="text/javascript">
+  function random_place(){
+    var link=["https://www.nytimes.com", 
+    "https://www.economist.com",
+    "https://www.thetimes.com",
+    "https://www.washingtonpost.com"]
+
+    var myrandom=Math.round(Math.random()*link.length)
+    window.location = link[myrandom]        
+  }
+
+  </script>
+
+  <script type="text/javascript">
+  $(function() {
+    $('input[name="daterange"]').daterangepicker({
+      timePicker: true,
+      timePickerIncrement: 30,
+      locale: {
+        format: 'MM/DD/YYYY h:mm A'
+      }
+    });
+  });
+  </script>
+</head>
+<body>
+
+    <!--<div align"center">
+      <div class="row">
+        <div class="col-lg-12">
+          <div class="container">-->
+            <div class="intro-banner">
+              <br>
+              <br>
+              <br>
+              <div class="intro-inner">
+                <h1 class="header" align='center' style="font-size: 64.1127px;">ReaderQ Feed</h1>
+                <h2 id="subtitle" class="text-center" align='center' style="font-size: 21.4167px;">Find something cool to read</h2>
+
+                <hr class="intro-divider">
+
+              </ul>
+            </div>
+          <!--</div>
+        </div>
+      </div>
+    </div>-->
+
+    {% if tasks %}
+    <div align="center">
+      <hr class="intro-divider">
+
+      {% for item in tasks %}
+
+        <section class="mdl-shadow--4dp mdl-color--white section--center story">
+          <div class="mdl-card">    
+            <div class="mdl-card__supporting-text">
+              <span class="title-wrapper">
+                  <a href={{item[2]}}>
+                    <h4> {{item[1]}} </h4>
+                    <!--<h6>(nytimes.com)</h6>-->
+                  </a>
+              </span>
+              <span class="description">{{item[4]}}</span>
+                <div class="hashtags">
+                {% for tag in item[5] %}
+                
+                    <a href="#">
+                        <button class="mdl-button mdl-js-button mdl-button--primary" data-upgraded=",MaterialButton">
+                        #{{tag}}
+                        </button></a>
+                
+                {% endfor %}
+                </div>
+            </div>
+          </div>
+
+      
+        </section><br><br>
+      {% endfor %}
+
+      <hr class="intro-divider">
+      {% else %}
+      <h1 class="header" align= "center" style="font-size: 64.1127px;"><a href="javascript:random_place();"><br>You haven't read anything, Get reading!</a></h1>
+      </div>
+      {% endif %}
+      {% block results %} {% endblock %}
+
+
+
+
+
+
+  </div>
+<!--    
+
+-->
+
+
+
+</body>
+</html>
+
+{% endblock %}
+
